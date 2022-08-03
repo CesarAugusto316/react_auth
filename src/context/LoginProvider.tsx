@@ -9,8 +9,8 @@ import {
 interface ContextProps {
   isLoading: boolean,
   userProfile: UserProfile,
-  isLoggedIn: boolean,
-  onFetchToken: (userInput: FormState) => void,
+  isUserLoggedIn: boolean,
+  onFetchToken: (userInput: FormState) => Promise<void>,
   onFetchUserProfile: () => Promise<void>
 }
 
@@ -22,20 +22,20 @@ export const useLoginContext = () => {
 
 /**
  *
- * @description when LoginService keeps track loggedUser
+ * @description LoginService keeps track if loggedInUser
  */
 const loginService = new LoginService();
 
 export const LoginProvider: FC<{children: ReactNode}> = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(loginService.isValidToken);
-  const [isLoading, setIsLoading] = useState<boolean>(loginService.isValidToken);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState<boolean>(loginService.hasValidToken);
+  const [isLoading, setIsLoading] = useState<boolean>(loginService.hasValidToken);
   const [userProfile, setUserProfile] = useState({} as UserProfile);
 
   const onFetchToken = async (userInput: FormState) => {
     try {
       await loginService.fetchToken(userInput);
-      if (loginService.isValidToken) {
-        setIsLoggedIn(true);
+      if (loginService.hasValidToken) {
+        setIsUserLoggedIn(true);
         setIsLoading(true);
       }
     } catch (error) {
@@ -46,7 +46,7 @@ export const LoginProvider: FC<{children: ReactNode}> = ({ children }) => {
   const onFetchUserProfile = async () => {
     try {
       await loginService.fetchUserProfile();
-      setUserProfile(loginService.loggedUser);
+      setUserProfile(loginService.loggedInUser);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -54,7 +54,7 @@ export const LoginProvider: FC<{children: ReactNode}> = ({ children }) => {
   };
 
   useEffect(() => {
-    if (loginService.isValidToken) {
+    if (loginService.hasValidToken) {
       loginService.fetchUserProfile()
         .then((user) => {
           setUserProfile(user);
@@ -68,7 +68,7 @@ export const LoginProvider: FC<{children: ReactNode}> = ({ children }) => {
 
   return (
     <Context.Provider value={{
-      isLoading, userProfile, isLoggedIn, onFetchToken, onFetchUserProfile,
+      isLoading, userProfile, isUserLoggedIn, onFetchToken, onFetchUserProfile,
     }}
     >
       {children}

@@ -18,23 +18,22 @@ export interface Token {
 /**
  *
  * @description Keeps track of current logged-in User, manage
- * authentication and saves user state updates in localStorage.
+ * authentication and saves user state in localStorage.
  */
 export class LoginService {
   private baseUrl = 'https://ms-discord-upy5mhs63a-rj.a.run.app';
   private token!: string | null;
-  public loggedUser!: UserProfile;
-  public isValidToken!: boolean;
-
+  public loggedInUser!: UserProfile;
+  public hasValidToken!: boolean;
 
   constructor() {
     this.readFromLocalStorage();
-    this.isValidToken = this.token ? true : false;
+    this.hasValidToken = this.token ? true : false;
   }
 
   /**
    *
-   * @description requests a JWT to the baseUrl for given UserProfile.
+   * @description requests a JWT to the baseUrl for a given UserProfile.
    * EveryTime we fetch a new token we programatically save it to
    * localStorage.
    */
@@ -43,7 +42,7 @@ export class LoginService {
       axios.post(`${this.baseUrl}/auth/login`, formData)
         .then(({ data }) => {
           this.token = data.token;
-          this.isValidToken = true;
+          this.hasValidToken = true;
           this.writeToLocalStorage();
           resolve(data);
         })
@@ -55,7 +54,7 @@ export class LoginService {
 
   /**
    *
-   * @description respons with a UserProfile for a given JWT.
+   * @description responds with a UserProfile for a given JWT.
    */
   public fetchUserProfile(): Promise<UserProfile> {
     if (this.token) {
@@ -65,7 +64,7 @@ export class LoginService {
             Authorization: `Bearer ${this.token}`,
           },
         }).then(({ data }) => {
-          this.loggedUser = data;
+          this.loggedInUser = data;
           resolve(data);
         })
           .catch((error) => {
@@ -76,15 +75,14 @@ export class LoginService {
     throw new Error('There is no token available');
   }
 
-  private readFromLocalStorage(): this {
+  private readFromLocalStorage(): void {
     this.token = localStorage.getItem('user-token');
-    return this;
   }
 
-  private writeToLocalStorage(): this {
+  private writeToLocalStorage(): void {
     if (this.token) {
       localStorage.setItem('user-token', this.token);
-      return this;
+      return;
     }
     throw new Error('There is no token available');
   }

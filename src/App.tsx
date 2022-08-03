@@ -6,14 +6,14 @@ import { useLoginContext } from './context/LoginProvider';
 
 
 export const App: FC = () => {
-  const { isLoggedIn } = useLoginContext();
+  const { isUserLoggedIn } = useLoginContext();
 
   return (
     <div id="app" data-theme="dark">
       <Navbar />
       <section className="section">
-        {!isLoggedIn && <Form />}
-        {isLoggedIn && <Welcome />}
+        {!isUserLoggedIn && <Form />}
+        {isUserLoggedIn && <Welcome />}
         <main className="main" />
       </section>
     </div>
