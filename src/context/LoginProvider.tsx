@@ -16,7 +16,7 @@ interface ContextProps {
 
 const Context = createContext({} as ContextProps);
 
-export const useLogin = () => {
+export const useLoginContext = () => {
   return useContext(Context);
 };
 

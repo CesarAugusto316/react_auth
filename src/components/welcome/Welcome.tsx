@@ -1,11 +1,11 @@
 import { FC, useEffect } from 'react';
 import { Spinner } from '../spinner/Spinner';
-import { useLogin } from '../../context/LoginProvider';
+import { useLoginContext } from '../../context/LoginProvider';
 import './welcome.css';
 
 
 export const Welcome: FC = () => {
-  const { userProfile, isLoading, onFetchUserProfile } = useLogin();
+  const { userProfile, isLoading, onFetchUserProfile } = useLoginContext();
 
   useEffect(() => {
     onFetchUserProfile();

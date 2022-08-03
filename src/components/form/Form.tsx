@@ -1,7 +1,7 @@
 import {
   ChangeEventHandler, FC, FormEventHandler, useState,
 } from 'react';
-import { useLogin } from '../../context/LoginProvider';
+import { useLoginContext } from '../../context/LoginProvider';
 import { FormState } from '../../services/LoginService.class';
 import './form.css';
 
@@ -13,7 +13,7 @@ const initialState: FormState = {
 
 export const Form: FC = () => {
   const [userInput, setUserInput] = useState<FormState>(initialState);
-  const { onFetchToken } = useLogin();
+  const { onFetchToken } = useLoginContext();
 
   const onSubmitHandler : FormEventHandler = async (e) => {
     e.preventDefault();

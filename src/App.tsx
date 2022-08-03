@@ -2,11 +2,11 @@ import { FC } from 'react';
 import {
   Form, Navbar, Welcome,
 } from './components';
-import { useLogin } from './context/LoginProvider';
+import { useLoginContext } from './context/LoginProvider';
 
 
 export const App: FC = () => {
-  const { isLoggedIn } = useLogin();
+  const { isLoggedIn } = useLoginContext();
 
   return (
     <div id="app" data-theme="dark">
