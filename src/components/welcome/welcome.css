@@ -1,0 +1,13 @@
+.primary-heading {
+  font-size: 3rem;
+  text-align: center;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.primary-heading__user {
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 3.8rem;
+}
